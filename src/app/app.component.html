@@ -1,0 +1,31 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <h3><a class="navbar-brand" href="#">{{ title }}</a></h3>
+  <button class="navbar-toggler" type="button" (click)="showMenu = !showMenu" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01" [style.display]="showMenu ? 'block' : 'none'">
+    <ul class="nav navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" #networkLink routerLinkActive="active-link" routerLink="/network"><button [class]="isActive(networkLink) ? 'btn btn-success' : 'btn btn-info'" type="button" class="btn btn-info">Network</button></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" #appsLink routerLinkActive="active-link" routerLink="/apps"><button [class]="isActive(appsLink) ? 'btn btn-success' : 'btn btn-info'" type="button" class="btn btn-info">Apps</button></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" #activityLink routerLinkActive="active-link" routerLink="/activity"><button [class]="isActive(activityLink) ? 'btn btn-success' : 'btn btn-info'" type="button" class="btn btn-info">Activity</button></a>
+      </li>
+    </ul>
+    <!--<form class="form-inline my-2 my-lg-0">-->
+    <!--<input class="form-control mr-sm-2" type="text" placeholder="Search">-->
+    <!--<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>-->
+    <!--</form>-->
+  </div>
+</nav>
+<div class="container" style="text-align:center">
+</div>
+<br>
+<div class="container main-container">
+  <router-outlet></router-outlet>
+</div>

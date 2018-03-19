@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+  font-family: 'Lato';
+}
+
+.jumbotron {
+  overflow: hidden;
+}
+
+#side-menu p, .btn, .btn-xs{
+  cursor: pointer;
+}
+h1, h2, h3, h4, p{
+  font-style:italic;
+}
+
+#side-menu p:hover {
+  font-weight:bold;
+}
+
+#side-menu button , .sticky-btn {
+  position: fixed;
+  bottom: 0;
+  z-index:10;
+}
+

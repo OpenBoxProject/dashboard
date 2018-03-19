@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-2">
+    <h3>Topology</h3>
+    <p>Click on an OBI for more details</p>
+  </div>
+  <div class="col-md-10">
+    <div class="jumbotron">
+
+      <app-graphs [graph]="topologyGraph"
+                  [orientation]="'TB'"
+                  (onLegendLabelClick)="onLegendLabelClick($event)"
+                  (onSelect)="onSelect($event)"
+      ></app-graphs>
+    </div>
+  </div>
+</div>
+<div id="obiView">
+  <div class="row" *ngIf="obi">
+    <div class="col-md-3">
+      <h3>OBI {{obi.dpid}}</h3>
+      <br>
+      <pre>{{selectedObiConfig}}</pre>
+    </div>
+    <div class="col-md-9 jumbotron">
+      <app-graphs [graph]="obi.processingGraph"
+                  [orientation]="'TB'"
+                  (onLegendLabelClick)="onLegendLabelClick($event)"
+                  (onSelect)="onOBIBlockSelect($event)"
+      ></app-graphs>
+    </div>
+  </div>
+</div>
+<div id="selectedView">
+  <div *ngIf="selected" class="jumbotron">
+    <h3> {{selected.label}}</h3>
+    <div>
+      <button class="btn-xs btn-primary" [hidden]="!obi" (click)="sendReadRequest(selected)">Send Read Request</button>
+    </div>
+    <br>
+    <div>
+      <pre>{{selected.json}}</pre>
+    </div>
+  </div>
+</div>

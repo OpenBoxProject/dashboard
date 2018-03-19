@@ -1,0 +1,41 @@
+<button class="sticky-btn btn btn-info" (click)="update()">Refresh</button>
+<div class="row">
+  <div class="col-xl-8 ">
+    <table class="jumbotron table table-hover ">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Time</th>
+        <th>Xid</th>
+        <th>Type</th>
+        <th>DPID</th>
+        <th>Block Id</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let event of events">
+        <td>{{event.direction}}</td>
+        <td>{{event.time}}</td>
+        <td>{{event.message.xid}}</td>
+        <td>
+          <span style="font-size: 1.0rem;" class="badge badge-pill" [ngClass]="{
+          'badge-danger': event.message.type === 'Alert',
+          'badge-success': event.message.type !== 'Alert'
+        }">{{event.message.type}}</span>
+        </td>
+        <td>{{event.message.dpid}}</td>
+        <td>{{event.message.blockId}}</td>
+        <td>
+          <button class="btn btn-info" (click)="onSelect(event)">More</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="resultsView" class="col-xl-4 ">
+   <div [hidden]="!selected" class="jumbotron">
+     <pre>{{selected}}</pre>
+   </div>
+  </div>
+</div>

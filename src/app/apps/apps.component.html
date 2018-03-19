@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-md-2">
+    <div id="side-menu">
+      <h3> <span class="badge badge-info">OpenBox Apps</span></h3>
+        <p *ngFor="let app of apps" (click)="scrollTo(app.name)">{{app.name}}</p>
+      <br>
+      <h3><span class="badge badge-info">Aggregation Result</span></h3>
+        <p *ngFor="let location of aggregated" (click)="scrollTo('location-'+location.location.id)">Location
+          {{location.location.id}}</p>
+
+      <button class="btn btn-info" (click)="scrollTo('side-menu')">To Menu <span class="glyphicons glyphicons-chevron-up"></span></button>
+
+    </div>
+  </div>
+  <div class="col-md-10">
+    <div class="row jumbotron">
+      <h1>OpenBox Apps</h1>
+    </div>
+    <div *ngFor="let app of apps" class="row">
+      <div [id]="app.name" class="col-md-2">
+        <h3>{{app.name}} App</h3>
+        <span class="badge badge-primary">{{app.statements.length}} Statement </span>
+        <span class="badge badge-primary">Priority {{app.priority}}</span>
+
+        <p>The App's processing graph as reported by the moonlight controller</p>
+      </div>
+      <div class="col-md-10">
+        <div *ngFor="let st of app.statements; let i = index" class="jumbotron">
+          <h2>Statement {{i}}</h2>
+          <span class="badge badge-info">Segment {{st.location.id}}</span>
+          <span class="badge badge-info">Endpoints
+        <span *ngFor="let e of st.location.directEndpoints">[{{e.id}}] </span>
+      </span>
+          <app-graphs [graph]="st.processingGraph" [orientation]="'TB'"
+                      (onSelect)="onSelect($event)"
+          ></app-graphs>
+        </div>
+      </div>
+    </div>
+    <div class="row jumbotron">
+      <h1>Merged Processing Graphs</h1>
+    </div>
+    <div *ngFor="let location of aggregated" [id]="'location-'+location.location.id" class="row">
+      <div class="col-md-2">
+        <h3>Location {{location.location.id}}</h3>
+        <p>The Location's processing graph as reported by the moonlight controller</p>
+      </div>
+      <div class="col-md-10 jumbotron">
+        <app-graphs [graph]="location.processingGraph" [orientation]="'TB'"
+                    (onSelect)="onSelect($event, location.location.id)"
+        ></app-graphs>
+      </div>
+    </div>
+    <div id="selectedView">
+      <div [hidden]="!selected" class="jumbotron">
+        <h3> {{selected.blockId}}</h3>
+        <div>
+          <button class="btn-xs btn-primary" [hidden]="!selected.dpid" (click)="sendReadRequest(selected.dpid, selected.blockId)">Send Read Request</button>
+        </div>
+        <pre>{{selected.json}}</pre>
+      </div>
+    </div>
+  </div>
