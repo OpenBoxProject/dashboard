@@ -52,7 +52,7 @@
       </div>
     </div>
     <div id="selectedView">
-      <div [hidden]="!selected" class="jumbotron">
+      <div *ngIf="selected" class="jumbotron">
         <h3> {{selected.blockId}}</h3>
         <div>
           <button class="btn-xs btn-primary" [hidden]="!selected.dpid" (click)="sendReadRequest(selected.dpid, selected.blockId)">Send Read Request</button>

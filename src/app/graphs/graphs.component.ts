@@ -56,7 +56,7 @@ export class GraphsComponent implements OnInit {
       }
 
     });
-    const links = Object.values(uniqueLinks);
+    const links = Object.keys(uniqueLinks).map(e => uniqueLinks[e]);
     return {nodes, links};
   }
 
