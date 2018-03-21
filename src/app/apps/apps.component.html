@@ -19,7 +19,7 @@
     <div *ngFor="let app of apps" class="row">
       <div [id]="app.name" class="col-md-2">
         <h3>{{app.name}} App</h3>
-        <span class="badge badge-primary">{{app.statements.length}} Statement </span>
+        <span class="badge badge-primary">{{app.statements.length}} Statement{{app.statements.length===1 ? '' : 's'}} </span>
         <span class="badge badge-primary">Priority {{app.priority}}</span>
 
         <p>The App's processing graph as reported by the moonlight controller</p>

@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {observable} from 'rxjs/symbol/observable';
 
 @Injectable()
 export class OpenboxService {
@@ -16,35 +17,52 @@ export class OpenboxService {
   obiUrl = this.base + 'obi.json';
   logsUrl = this.base + 'network/log.json';
   readRequestUrl = this.base + 'message/read';
+  private _onControllerConnectionSubscribers: EventEmitter<{ online }> = new EventEmitter();
 
   constructor(private http: HttpClient) { }
 
+  get onControllerConnect(): EventEmitter<{ online }> {
+    return this._onControllerConnectionSubscribers;
+  }
+
+  private onControllerStatusChange(online) {
+    this._onControllerConnectionSubscribers.emit(online);
+  }
+
+  private request(requestObservable) {
+    requestObservable.subscribe(() => {
+      this.onControllerStatusChange({online: true});
+    },
+      err => this.onControllerStatusChange({online: false})
+  );
+
+    return requestObservable;
+  }
+
   getTopology() {
-    return this.http.get(this.topologyUrl);
+    return this.request(this.http.get(this.topologyUrl));
   }
 
   getApps() {
-    return this.http.get(this.appsUrl);
+    return this.request(this.http.get(this.appsUrl));
   }
 
   getAggregated() {
-    return this.http.get(this.aggregatedUrl);
+    return this.request(this.http.get(this.aggregatedUrl));
   }
 
   getOBI(dpid) {
-    return this.http.get(`${this.obiUrl}?dpid=${dpid}`);
+    return this.request(this.http.get(`${this.obiUrl}?dpid=${dpid}`));
   }
 
   getSouthboundLog() {
-    return this.http.get(`${this.logsUrl}`);
+    return this.request(this.http.get(`${this.logsUrl}`));
   }
 
   sendReadRequest(dpid, blockId) {
-    return this.http.post(`${this.readRequestUrl}`, {
+    return this.request(this.http.post(`${this.readRequestUrl}`, {
       locationSpecifier: dpid,
       blockId: blockId
-    });
+    }));
   }
-
-
 }

@@ -19,7 +19,7 @@
         <td>{{event.time}}</td>
         <td>{{event.message.xid}}</td>
         <td>
-          <span style="font-size: 1.0rem;" class="badge badge-pill" [ngClass]="{
+          <span style="font-size: 0.8rem;" class="badge badge-pill" [ngClass]="{
           'badge-danger': event.message.type === 'Alert',
           'badge-success': event.message.type !== 'Alert'
         }">{{event.message.type}}</span>

@@ -23,10 +23,13 @@ export class NetworkComponent implements OnInit {
       .subscribe((data: { nodes: any[], links: any[] }) => {
         data.nodes = data.nodes.map((n) => {
           const isEndpoint = n.id.startsWith('E');
+          const isSegment = n.id.startsWith('S');
           if (isEndpoint) {
-            n.color = n.id.startsWith('E') ? '#607d8b' : 'yellow';
+            n.color = '#607d8b';
+          } else if (isSegment) {
+            n.color = 'yellow'; // todo: make active obi green
           } else {
-            n.color = n.id.startsWith('E') ? '#607d8b' : 'yellow'; // todo: make active obi green
+            n.color = '#00d207'; // todo: make active obi green
           }
 
           n.originalBlock = {id: n.id, label: n.label, properties: n.properties};
