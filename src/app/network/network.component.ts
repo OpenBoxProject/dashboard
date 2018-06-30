@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {OpenboxService} from '../openbox.service';
+import {OpenboxService} from '../services/openbox.service';
 import {ScrollToConfigOptions, ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 import {GraphsComponent} from '../graphs/graphs.component';
 
@@ -10,7 +10,6 @@ import {GraphsComponent} from '../graphs/graphs.component';
 })
 export class NetworkComponent implements OnInit {
   obi: any;
-  selectedObiConfig: string;
   selected: any;
   topologyGraph: { nodes: any[], links: any[] };
 
@@ -46,16 +45,15 @@ export class NetworkComponent implements OnInit {
         json: JSON.stringify(node.originalBlock, null, 2),
         object: node.originalBlock,
         label: node.label
-    }
+      };
       this.obi = null;
     } else {
-      this.openboxService.getOBI(node.dpid) // todo: add obi id
+      this.openboxService.getOBI(node.dpid)
         .subscribe((data: { dpid, properties, processingGraph: { nodes: any[], links: any[] } }) => {
           data.processingGraph = GraphsComponent.toGraph(data.processingGraph);
           console.log(data);
           this.obi = data;
           this.selected = null;
-          this.selectedObiConfig = JSON.stringify(data.properties, null, 2);
 
           this.scrollToService.scrollTo({
             target: 'obiView'
@@ -67,20 +65,6 @@ export class NetworkComponent implements OnInit {
 
   }
 
-  onLegendLabelClick(data) {
-    console.log('Item clicked', data);
-  }
-
-  onOBIBlockSelect(node) {
-    console.log('OBI processing block clicked', node);
-    this.selected = {
-      json: JSON.stringify(node.originalBlock, null, 2),
-      object: node.originalBlock,
-      label: node.label
-    };
-    this.scrollToDetails();
-  }
-
   scrollToDetails() {
 
     this.scrollToService.scrollTo({
@@ -88,11 +72,4 @@ export class NetworkComponent implements OnInit {
     });
   }
 
-  sendReadRequest(selected) {
-    console.log(`sending read request to ${this.obi.dpid}/${selected.label}`);
-    this.openboxService.sendReadRequest(this.obi.dpid, selected.label)
-      .subscribe((data: { xid }) => {
-        console.log(data);
-      });
-  }
 }

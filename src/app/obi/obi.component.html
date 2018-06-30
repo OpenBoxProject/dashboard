@@ -1,0 +1,20 @@
+<div class="row jumbotron">
+  <h3>OBI {{obi.dpid}}</h3>
+
+  <div *ngIf="globalStats">
+    <pre>{{globalStats}}</pre>
+  </div>
+  <pre>{{configuration}}</pre>
+</div>
+<div class="row jumbotron">
+  <app-graphs [graph]="obi.processingGraph"
+              [orientation]="'TB'"
+              (onLegendLabelClick)="onLegendLabelClick($event)"
+              (onSelect)="onOBIBlockSelect($event)"
+  ></app-graphs>
+</div>
+<div id="obiDetailsView">
+  <div *ngIf="selected">
+    <app-block [block]="selected" [dpid]="obi.dpid"></app-block>
+  </div>
+</div>

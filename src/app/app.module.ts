@@ -7,12 +7,15 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { GraphsComponent } from './graphs/graphs.component';
-import { OpenboxService } from './openbox.service';
+import { OpenboxService } from './services/openbox.service';
 import { AppsComponent } from './apps/apps.component';
 import { NetworkComponent } from './network/network.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { SouthboundLogComponent } from './southbound-log/southbound-log.component';
+import { ObiComponent } from './obi/obi.component';
+import { BlockComponent } from './obi/block/block.component';
+import { BlockRequestComponent } from './obi/block/block-request/block-request.component';
 const routes: Routes = [
   { path: '', redirectTo: '/network', pathMatch: 'full' },
   { path: 'network', component: NetworkComponent },
@@ -26,7 +29,10 @@ const routes: Routes = [
     GraphsComponent,
     AppsComponent,
     NetworkComponent,
-    SouthboundLogComponent
+    SouthboundLogComponent,
+    ObiComponent,
+    BlockComponent,
+    BlockRequestComponent
   ],
   imports: [
     NgxGraphModule,

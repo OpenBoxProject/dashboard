@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { OpenboxService } from '../openbox.service';
+import { OpenboxService } from '../services/openbox.service';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 import {GraphsComponent} from "../graphs/graphs.component";
 
@@ -43,36 +43,12 @@ export class AppsComponent implements OnInit {
     });
   }
 
-  onSelect(node, dpid) {
-    console.log('Item clicked', node);
-    this.selected = {
-      json: JSON.stringify(node.originalBlock, null, 2),
-      blockId: node.label,
-      dpid: dpid
-    };
-
-    const config: ScrollToConfigOptions = {
-      target: 'selectedView'
-    };
-
-    this.scrollToService.scrollTo(config);
-  }
-
- scrollTo(target) {
+  scrollTo(target) {
     const config: ScrollToConfigOptions = {
       target: target
     };
 
     this.scrollToService.scrollTo(config);
-  }
-
-
-  sendReadRequest(dpid, blockId) {
-    console.log(`sending read request to ${dpid}/${blockId}`);
-    this.openboxService.sendReadRequest(dpid, blockId)
-      .subscribe((data: { xid }) => {
-        console.log(data);
-      });
   }
 
 }

@@ -1,14 +1,15 @@
 <div class="row">
   <div class="col-md-2">
     <div id="side-menu">
-      <h3> <span class="badge badge-info">OpenBox Apps</span></h3>
-        <p *ngFor="let app of apps" (click)="scrollTo(app.name)">{{app.name}}</p>
+      <h3><span class="badge badge-info">OpenBox Apps</span></h3>
+      <p *ngFor="let app of apps" (click)="scrollTo(app.name)">{{app.name}}</p>
       <br>
       <h3><span class="badge badge-info">Aggregation Result</span></h3>
-        <p *ngFor="let location of aggregated" (click)="scrollTo('location-'+location.location.id)">Location
-          {{location.location.id}}</p>
+      <p *ngFor="let location of aggregated" (click)="scrollTo('location-'+location.location.id)">Location
+        {{location.location.id}}</p>
 
-      <button class="btn btn-info" (click)="scrollTo('side-menu')">To Menu <span class="glyphicons glyphicons-chevron-up"></span></button>
+      <button class="btn btn-info" (click)="scrollTo('side-menu')">To Menu <span
+        class="glyphicons glyphicons-chevron-up"></span></button>
 
     </div>
   </div>
@@ -19,7 +20,8 @@
     <div *ngFor="let app of apps" class="row">
       <div [id]="app.name" class="col-md-2">
         <h3>{{app.name}} App</h3>
-        <span class="badge badge-primary">{{app.statements.length}} Statement{{app.statements.length===1 ? '' : 's'}} </span>
+        <span
+          class="badge badge-primary">{{app.statements.length}} Statement{{app.statements.length===1 ? '' : 's'}} </span>
         <span class="badge badge-primary">Priority {{app.priority}}</span>
 
         <p>The App's processing graph as reported by the moonlight controller</p>
@@ -54,10 +56,8 @@
     <div id="selectedView">
       <div *ngIf="selected" class="jumbotron">
         <h3> {{selected.blockId}}</h3>
-        <div>
-          <button class="btn-xs btn-primary" [hidden]="!selected.dpid" (click)="sendReadRequest(selected.dpid, selected.blockId)">Send Read Request</button>
-        </div>
         <pre>{{selected.json}}</pre>
       </div>
     </div>
   </div>
+</div>

@@ -22,7 +22,7 @@ export class GraphsComponent implements OnInit {
   view: any[];
   showLegend = false;
   colorScheme = colorSets.find(s => s.name === 'vivid');
-  curve = shape.curveBundle.beta(1);
+  curve = shape.curveStepBefore;
 
   // fitContainer: boolean = true;
   // autoZoom: boolean = false;

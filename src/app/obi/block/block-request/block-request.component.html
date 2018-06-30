@@ -1,0 +1,15 @@
+<div class="jumbotron">
+  <h3><code><strong>{{handle.name}}</strong></code> Request</h3>
+  <br/>
+  <input [hidden]="type!=='write' || handle.type==='null'" class="form-control" type="text" placeholder="write value" [(ngModel)]="writeValue"/>
+  <pre>{{handle.description}}</pre>
+  <br/>
+  <input type="button" (click)="sendRequest()" class="btn btn-primary" value="Send Request">
+</div>
+
+<div *ngIf="xid" class="jumbotron">
+  <h3>Transaction <code><strong>#{{xid}}</strong></code></h3>
+  <app-southbound-log [xid]="xid" [compact]="true"></app-southbound-log>
+</div>
+
+
