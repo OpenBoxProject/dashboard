@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { GraphsComponent } from './graphs/graphs.component';
 import { OpenboxService } from './services/openbox.service';
+import { OverviewComponent } from './overview/overview.component';
 import { AppsComponent } from './apps/apps.component';
 import { NetworkComponent } from './network/network.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,12 +20,14 @@ import { BlockRequestComponent } from './obi/block/block-request/block-request.c
 const routes: Routes = [
   { path: '', redirectTo: '/network', pathMatch: 'full' },
   { path: 'network', component: NetworkComponent },
+  { path: 'overview', component: OverviewComponent },
   { path: 'apps', component: AppsComponent },
   { path: 'activity', component: SouthboundLogComponent },
 ];
 
 @NgModule({
   declarations: [
+    OverviewComponent,
     AppComponent,
     GraphsComponent,
     AppsComponent,

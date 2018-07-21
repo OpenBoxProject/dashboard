@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, OnDestroy} from '@angular/core';
 import { OpenboxService } from '../services/openbox.service';
 import {ScrollToConfigOptions, ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 
@@ -7,13 +7,14 @@ import {ScrollToConfigOptions, ScrollToService} from '@nicky-lenaers/ngx-scroll-
   templateUrl: './southbound-log.component.html',
   styleUrls: ['./southbound-log.component.css']
 })
-export class SouthboundLogComponent implements OnInit, OnChanges {
+export class SouthboundLogComponent implements OnInit, OnChanges, OnDestroy {
   events: { time, direction, message: { xid, blockId, type, dpid?, sourceAddr, handle? }}[];
   selected = null;
 
   @Input() xid;
   @Input() compact = false;
   @Input() refresh = true;
+  private updateHandle: number;
 
   constructor(private openboxService: OpenboxService,
               public scrollToService: ScrollToService) { }
@@ -21,7 +22,7 @@ export class SouthboundLogComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.update();
     if (this.refresh) {
-      setInterval(this.update.bind(this), 5000);
+      this.updateHandle = setInterval(this.update.bind(this), 5000);
     }
   }
 
@@ -68,4 +69,11 @@ export class SouthboundLogComponent implements OnInit, OnChanges {
     this.selected = null;
     this.update();
   }
+
+  ngOnDestroy() {
+    if (this.refresh && this.updateHandle !== null) {
+      clearInterval(this.updateHandle);
+    }
+  }
+
 }
