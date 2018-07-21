@@ -1,0 +1,16 @@
+<div class="row jumbotron">
+  <div class="col-sm-12">
+  <h1>Overview</h1>
+  <br/>
+  <p>Connected to Moonlight Controller on {{serverUrl}}</p>
+  <p>OpenBox Network Running {{numApps}} Apps on {{numOBIs}} OBIs </p>
+</div>
+</div>
+
+<div class="row">
+  <div class="jumbotron">
+    <app-graphs [graph]="topologyGraph"
+                [orientation]="'TB'"
+    ></app-graphs>
+  </div>
+</div>

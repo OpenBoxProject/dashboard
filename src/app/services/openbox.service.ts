@@ -1,25 +1,28 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Block} from '../model/block';
-import { Observable } from 'rxjs/Observable';
-import * as io from 'socket.io-client';
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class OpenboxService {
-  private socket;
-  private socketObservable: Observable<{}>;
+  private stompClient;
+  private openBoxMessageBus = new Subject();
+  private events = [];
 
   private blocks: Block[];
 
   private mockUrl = 'assets/mocks/';
   private serverUrl = 'http://localhost:3631/';
-  private webSocketUrl =  'http://localhost:3631/';
+  private webSocketUrl =  'http://localhost:8080/socket';
 
   private useMock = false;
 
-  private base = this.useMock ? this.mockUrl : this.serverUrl;
+  base = this.useMock ? this.mockUrl : this.serverUrl;
   topologyUrl = this.base + 'topology.json';
   appsUrl = this.base + 'apps.json';
+  numAppsUrl = this.base + 'numApps';
   aggregatedUrl = this.base + 'aggregated.json';
   obiUrl = this.base + 'obi.json';
   logsUrl = this.base + 'network/log.json';
@@ -35,18 +38,23 @@ export class OpenboxService {
   }
 
   private initializeWebSocket() {
-    this.socketObservable = new Observable(observer => {
 
-      this.socket = io.connect(this.webSocketUrl);
-
-      this.socket.on('message', (data) => {
-        observer.next(data);
+    const socket = new SockJS(`${this.webSocketUrl}`);
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.connect({}, (frame) => {
+      // setConnected(true);
+      console.log('Connected: ' + frame);
+      this.stompClient.subscribe('/topic/greetings', function (greeting) {
+        // showGreeting(JSON.parse(greeting.body).content);
+        console.log(JSON.parse(greeting.body).content);
       });
 
-      return () => {
-        this.socket.disconnect();
-      };
+      this.stompClient.subscribe('/topic/messages', (message) => this.onNewMessage(JSON.parse(message.body)));
 
+      const data = JSON.stringify({
+        'name' : 'OpenBox Dashboard'
+      });
+      this.stompClient.send('/app/hello', {}, data);
     });
   }
 
@@ -54,6 +62,20 @@ export class OpenboxService {
     return this._onControllerConnectionSubscribers;
   }
 
+  onNewMessage(e) {
+    let next = this.events.reverse();
+
+    if (e.message.type === 'Alert') {
+      e.dpid = e.message.origin_dpid;
+    }
+
+    e.message.handle = e.message.readHandle || e.message.writeHandle;
+    next.push(e);
+    next = next.reverse().slice(0, 5);
+    this.events = next;
+
+    this.openBoxMessageBus.next(this.events);
+  }
 
   getTopology() {
     return this.http.get(this.topologyUrl);
@@ -61,6 +83,10 @@ export class OpenboxService {
 
   getApps() {
     return this.http.get(this.appsUrl);
+  }
+
+  getNumApps() {
+    return this.http.get(this.numAppsUrl);
   }
 
   getAggregated() {
@@ -72,7 +98,12 @@ export class OpenboxService {
   }
 
   getSouthboundLog() {
-    return this.http.get(`${this.logsUrl}`);
+    if (this.events.length === 0) {
+      this.http.get(this.logsUrl).subscribe((messages: [{}]) => messages.forEach(this.onNewMessage.bind(this)));
+    } else {
+      setTimeout(() => this.openBoxMessageBus.next(this.events), 0);
+    }
+    return this.openBoxMessageBus;
   }
 
   getBlock(type) {

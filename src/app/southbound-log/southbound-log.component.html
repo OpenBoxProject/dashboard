@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let event of events">
+      <tr *ngFor="let event of filteredMessages">
         <td><code>{{event.direction}}</code></td>
         <td>{{event.time}}</td>
         <td>
@@ -39,7 +39,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let event of events">
+      <tr *ngFor="let event of filteredMessages">
         <td><code>{{event.direction}}</code></td>
         <td>{{event.time}}</td>
         <td>{{event.message.xid}}</td>

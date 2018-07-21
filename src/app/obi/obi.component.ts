@@ -12,6 +12,7 @@ export class ObiComponent implements OnInit {
   selected: { json: string; originalBlock: any; label: any; config: {}; };
 
   @Input() obi;
+  globalStats: object[];
 
   constructor(private openboxService: OpenboxService,
               private scrollToService: ScrollToService) { }
