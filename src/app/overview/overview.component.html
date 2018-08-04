@@ -8,6 +8,12 @@
 </div>
 
 <div class="row">
+  <div class="col-sm-3 jumbotron" *ngFor="let gs of globalStatsArr">
+      GlobalStats: {{ gs }}
+  </div>
+</div>
+
+<div class="row">
   <div class="jumbotron">
     <app-graphs [graph]="topologyGraph"
                 [orientation]="'TB'"

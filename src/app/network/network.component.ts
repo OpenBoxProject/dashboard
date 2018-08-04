@@ -1,17 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenboxService} from '../services/openbox.service';
 import {ScrollToConfigOptions, ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 import {GraphsComponent} from '../graphs/graphs.component';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-network',
   templateUrl: './network.component.html',
   styleUrls: ['./network.component.css']
 })
-export class NetworkComponent implements OnInit {
+export class NetworkComponent implements OnInit, OnDestroy {
   obi: any;
   selected: any;
   topologyGraph: { nodes: any[], links: any[] };
+  topologySubscription: Subscription;
 
   constructor(private openboxService: OpenboxService,
               private scrollToService: ScrollToService) {
@@ -19,23 +21,13 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.openboxService.getTopology()
-      .subscribe((data: { nodes: any[], links: any[] }) => {
-        data.nodes = data.nodes.map((n) => {
-          const isEndpoint = n.id.startsWith('E');
-          const isSegment = n.id.startsWith('S');
-          if (isEndpoint) {
-            n.color = '#607d8b';
-          } else if (isSegment) {
-            n.color = 'yellow'; // todo: make active obi green
-          } else {
-            n.color = '#00d207'; // todo: make active obi green
-          }
+      .subscribe(this.onTopologyUpdated.bind(this));
 
-          n.originalBlock = {id: n.id, label: n.label, properties: n.properties};
-          return n;
-        });
-        this.topologyGraph = data;
-      });
+    this.topologySubscription = this.openboxService.subscribeToTopologyUpdates(this.onTopologyUpdated.bind(this));
+  }
+
+  onTopologyUpdated(topologyGraph: { nodes: any[], links: any[] }) {
+    this.topologyGraph = topologyGraph;
   }
 
   onSelect(node) {
@@ -70,6 +62,10 @@ export class NetworkComponent implements OnInit {
     this.scrollToService.scrollTo({
       target: 'selectedView'
     });
+  }
+
+  ngOnDestroy() {
+    this.topologySubscription.unsubscribe();
   }
 
 }

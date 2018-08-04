@@ -9,8 +9,10 @@ import {Subject} from 'rxjs/Subject';
 export class OpenboxService {
   private stompClient;
   private openBoxMessageBus = new Subject();
-  private events = [];
-
+  private openBoxAlertsBus = new Subject();
+  private openBoxTopologyBus = new Subject();
+  private openBoxGlobalStatsBus = new Subject();
+  private messages = [];
   private blocks: Block[];
 
   private mockUrl = 'assets/mocks/';
@@ -34,6 +36,8 @@ export class OpenboxService {
 
   constructor(private http: HttpClient) {
     this.http.get(`${this.blocksUrl}`).subscribe((blocks: Block[]) => this.blocks = blocks);
+    this.http.get(this.logsUrl).subscribe((messages: [{}]) => messages.forEach(this.onNewMessage.bind(this)));
+
     this.initializeWebSocket();
   }
 
@@ -50,6 +54,7 @@ export class OpenboxService {
       });
 
       this.stompClient.subscribe('/topic/messages', (message) => this.onNewMessage(JSON.parse(message.body)));
+      this.stompClient.subscribe('/topic/topology', this.onTopologyUpdated.bind(this));
 
       const data = JSON.stringify({
         'name' : 'OpenBox Dashboard'
@@ -63,22 +68,59 @@ export class OpenboxService {
   }
 
   onNewMessage(e) {
-    let next = this.events.reverse();
+    let next = this.messages.reverse();
 
     if (e.message.type === 'Alert') {
       e.dpid = e.message.origin_dpid;
+      this.openBoxAlertsBus.next(e);
+    } else if (e.message.type === 'GlobalStatsResponse') {
+      this.openBoxGlobalStatsBus.next(e);
     }
 
     e.message.handle = e.message.readHandle || e.message.writeHandle;
     next.push(e);
     next = next.reverse().slice(0, 5);
-    this.events = next;
+    this.messages = next;
 
-    this.openBoxMessageBus.next(this.events);
+    this.openBoxMessageBus.next(this.messages);
+  }
+
+  onTopologyUpdated(message) {
+    const data = JSON.parse(message.body);
+    data.nodes = data.nodes.map((n) => {
+      const isEndpoint = n.id.startsWith('E');
+      const isSegment = n.id.startsWith('S');
+      if (isEndpoint) {
+        n.color = '#607d8b';
+      } else if (isSegment) {
+        n.color = 'yellow'; // todo: make active obi green
+      } else {
+        n.color = '#00d207'; // todo: make active obi green
+      }
+
+      n.originalBlock = {id: n.id, label: n.label, properties: n.properties};
+      return n;
+    });
+
+    const topologyGraph = data;
+    this.openBoxTopologyBus.next(topologyGraph);
+  }
+
+  subscribeToTopologyUpdates(cb) {
+    return this.openBoxTopologyBus.subscribe(cb);
   }
 
   getTopology() {
     return this.http.get(this.topologyUrl);
+  }
+
+  subscribeToGlobalStatsUpdates(cb) {
+    return this.openBoxGlobalStatsBus.subscribe(cb);
+  }
+
+  subscribeToSouthboundMessagesUpdates(cb) {
+    setTimeout(() => this.openBoxMessageBus.next(this.messages), 0);
+    return this.openBoxMessageBus.subscribe(cb);
   }
 
   getApps() {
@@ -95,15 +137,6 @@ export class OpenboxService {
 
   getOBI(dpid) {
     return this.http.get(`${this.obiUrl}?dpid=${dpid}`);
-  }
-
-  getSouthboundLog() {
-    if (this.events.length === 0) {
-      this.http.get(this.logsUrl).subscribe((messages: [{}]) => messages.forEach(this.onNewMessage.bind(this)));
-    } else {
-      setTimeout(() => this.openBoxMessageBus.next(this.events), 0);
-    }
-    return this.openBoxMessageBus;
   }
 
   getBlock(type) {
@@ -134,4 +167,5 @@ export class OpenboxService {
         value: value
       });
   }
+
 }

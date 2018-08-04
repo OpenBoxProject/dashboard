@@ -31,8 +31,8 @@ export class SouthboundLogComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   subscribe() {
-    this.subscription = this.openboxService.getSouthboundLog()
-      .subscribe((data: {
+    this.subscription = this.openboxService.subscribeToSouthboundMessagesUpdates
+      ((data: {
           time, dpid?, direction, message: {
             xid, blockId, type, origin_dpid?, messages?, sourceAddr,
             handle?, readHandle?, writeHandle?
