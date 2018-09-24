@@ -8,6 +8,11 @@ body {
   overflow: hidden;
 }
 
+.jumbotron-heading {
+  border-left: 5px solid;
+  border-color: #593196;
+}
+
 #side-menu p, .btn, .btn-xs{
   cursor: pointer;
 }
@@ -24,4 +29,5 @@ h1, h2, h3, h4, p{
   bottom: 0;
   z-index:10;
 }
+
 

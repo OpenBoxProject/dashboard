@@ -1,22 +1,45 @@
 <div class="row jumbotron">
+  <div class="offset-sm-2 col-sm-3">
+    <div routerLink="/apps" class="panel clickable">
+    <div class="panel-heading">
+        <h3>Apps</h3>
+    </div>
+      <div class="count-title">
+        <span>{{numApps}}</span>
+      </div>
+    </div>
+  </div>
+ <div class="offset-sm-2 col-sm-3">
+    <div class="panel">
+    <div class="panel-heading">
+        <h3>OBIs</h3>
+    </div>
+      <div class="count-title">
+        <span>{{numOBIs}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row jumbotron">
+  <h2>Connected to Moonlight Controller on {{serverUrl}}</h2>
+</div>
+
+<div class="row jumbotron">
   <div class="col-sm-12">
-  <h1>Overview</h1>
-  <br/>
-  <p>Connected to Moonlight Controller on {{serverUrl}}</p>
-  <p>OpenBox Network Running {{numApps}} Apps on {{numOBIs}} OBIs </p>
-</div>
-</div>
-
-<div class="row">
-  <div class="col-sm-3 jumbotron" *ngFor="let gs of globalStatsArr">
-      GlobalStats: {{ gs }}
+  <h2>OBIs Global Statistics</h2>
+  <hr/>
+  <div class="row">
+    <div class="col-sm-5">
+      <h2> CPU </h2>
+      <nvd3 [options]="cpuOptions" [data]="cpuData"></nvd3>
+    </div>
+    <div class="offset-sm-2 col-sm-5">
+      <h2> Memory </h2>
+      <nvd3 [options]="memOptions" [data]="memData"></nvd3>
+    </div>
+  </div>
   </div>
 </div>
-
-<div class="row">
-  <div class="jumbotron">
-    <app-graphs [graph]="topologyGraph"
-                [orientation]="'TB'"
-    ></app-graphs>
-  </div>
-</div>
+<app-network></app-network>

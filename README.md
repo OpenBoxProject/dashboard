@@ -1,27 +1,34 @@
-# OpenboxDashboard
+# Openbox Dashboard
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.3.
+## Introduction
 
-## Development server
+The OpenBox Dashboard connects to a running OpenBox Moonlight Controller, and allows to examine the deployed network, the loaded OpenBox applications, and the OpenBox instances.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+From the dashboard, you can see the processing graph of each application, and the aggregation results for each network location.
 
-## Code scaffolding
+Once an OBI joins the network, you can examine the processing graph and processing blocks deployed on it, and interact with them - send read/write requests, see the blocks configurations, and monitor their performance.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Installation
 
-## Build
+### Build the docker image
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+```bash
+docker build . -t moonlight-dashboard
+```
 
-## Running unit tests
+### Run the dashboard
+```bash
+docker run -d -p4200:4200 --name dashboard -ti moonlight-dashboard
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+The dashboard should be available on http://localhost:4200
 
-## Running end-to-end tests
+#### Note
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+The dashboard REST server is expected to run on localhost:3635
 
-## Further help
+The dashboard Websocket is expected to run on localhost:8080
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+If you are using Docker to run the moonlight controller, don't forget to expose these ports
+
+For more details, see Moonlight Controller

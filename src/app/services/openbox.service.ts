@@ -4,6 +4,7 @@ import {Block} from '../model/block';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import {Subject} from 'rxjs/Subject';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class OpenboxService {
@@ -16,7 +17,7 @@ export class OpenboxService {
   private blocks: Block[];
 
   private mockUrl = 'assets/mocks/';
-  private serverUrl = 'http://localhost:3631/';
+  private serverUrl = 'http://localhost:3635/';
   private webSocketUrl =  'http://localhost:8080/socket';
 
   private useMock = false;
@@ -79,15 +80,14 @@ export class OpenboxService {
 
     e.message.handle = e.message.readHandle || e.message.writeHandle;
     next.push(e);
-    next = next.reverse().slice(0, 5);
+    next = next.reverse().slice(0, 100);
     this.messages = next;
 
     this.openBoxMessageBus.next(this.messages);
   }
 
-  onTopologyUpdated(message) {
-    const data = JSON.parse(message.body);
-    data.nodes = data.nodes.map((n) => {
+  colorTopologyGraph(topology) {
+    topology.nodes = topology.nodes.map((n) => {
       const isEndpoint = n.id.startsWith('E');
       const isSegment = n.id.startsWith('S');
       if (isEndpoint) {
@@ -101,8 +101,10 @@ export class OpenboxService {
       n.originalBlock = {id: n.id, label: n.label, properties: n.properties};
       return n;
     });
-
-    const topologyGraph = data;
+    return topology;
+  }
+  onTopologyUpdated(message) {
+    const topologyGraph = this.colorTopologyGraph(JSON.parse(message.body));
     this.openBoxTopologyBus.next(topologyGraph);
   }
 
@@ -111,7 +113,7 @@ export class OpenboxService {
   }
 
   getTopology() {
-    return this.http.get(this.topologyUrl);
+    return this.http.get(this.topologyUrl).pipe(map(this.colorTopologyGraph));
   }
 
   subscribeToGlobalStatsUpdates(cb) {

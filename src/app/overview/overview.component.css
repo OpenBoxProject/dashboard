@@ -1,0 +1,25 @@
+.panel{
+  background-color: white;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 3px 5px #88888882;
+}
+
+.count-title {
+  font-size: 40px;
+  font-weight: normal;
+  margin-top: 10px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.panel .panel-heading {
+  background-color: #533391;
+  color: white;
+  padding: 5px;
+
+}
+
+.clickable {
+  cursor: pointer;
+}

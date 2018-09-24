@@ -4,6 +4,7 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { NvD3Module } from 'ng2-nvd3';
 
 import { AppComponent } from './app.component';
 import { GraphsComponent } from './graphs/graphs.component';
@@ -17,9 +18,10 @@ import { SouthboundLogComponent } from './southbound-log/southbound-log.componen
 import { ObiComponent } from './obi/obi.component';
 import { BlockComponent } from './obi/block/block.component';
 import { BlockRequestComponent } from './obi/block/block-request/block-request.component';
+
+
 const routes: Routes = [
-  { path: '', redirectTo: '/network', pathMatch: 'full' },
-  { path: 'network', component: NetworkComponent },
+  { path: '', redirectTo: '/overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
   { path: 'apps', component: AppsComponent },
   { path: 'activity', component: SouthboundLogComponent },
@@ -45,7 +47,8 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule,
     RouterModule.forRoot(routes),
-    ScrollToModule.forRoot()
+    ScrollToModule.forRoot(),
+    NvD3Module
   ],
   providers: [ OpenboxService ],
   bootstrap: [AppComponent]

@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { OpenboxService } from '../services/openbox.service';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
-import {GraphsComponent} from "../graphs/graphs.component";
+import {GraphsComponent} from '../graphs/graphs.component';
 
 @Component({
   selector: 'app-apps',

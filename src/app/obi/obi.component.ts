@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import {OpenboxService} from '../services/openbox.service';
 import {ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 
@@ -7,18 +7,26 @@ import {ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
   templateUrl: './obi.component.html',
   styleUrls: ['./obi.component.css']
 })
-export class ObiComponent implements OnInit {
+export class ObiComponent implements OnInit, OnChanges {
+
   config: string;
   selected: { json: string; originalBlock: any; label: any; config: {}; };
 
   @Input() obi;
   globalStats: object[];
+  emptyGraphSentToOBI: boolean;
 
   constructor(private openboxService: OpenboxService,
               private scrollToService: ScrollToService) { }
 
   ngOnInit() {
+    this.ngOnChanges(null);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     this.config = JSON.stringify(this.obi.properties, null, 2);
+    this.emptyGraphSentToOBI = this.obi.processingGraph.nodes.length === 0;
+    this.selected = null;
   }
 
   onLegendLabelClick(data) {

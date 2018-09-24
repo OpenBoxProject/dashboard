@@ -1,13 +1,8 @@
 <div class="row jumbotron">
-  <div class="col-sm-12">
-  <h1>Topology</h1>
-  <br/>
-  <span>Click on an OBI for more details</span>
-</div>
-</div>
-
-<div class="row">
-    <div class="jumbotron">
+      <div class="col-sm-12">
+        <h1>Topology</h1>
+        <hr/>
+        <h5>Click on an OBI for more details</h5>
       <app-graphs [graph]="topologyGraph"
                   [orientation]="'TB'"
                   (onLegendLabelClick)="onLegendLabelClick($event)"
@@ -16,7 +11,7 @@
     </div>
 </div>
 <div id="selectedView">
-  <div *ngIf="selected">
+  <div *ngIf="selected" class="jumbotron">
     <h5>Configuration</h5>
     <pre>{{selected.json}}</pre>
   </div>

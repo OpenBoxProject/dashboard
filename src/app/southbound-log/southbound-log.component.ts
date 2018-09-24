@@ -45,10 +45,13 @@ export class SouthboundLogComponent implements OnInit, OnChanges, OnDestroy {
 
   updateData(messages): any {
 
-    this.messages = messages;
-
     if (this.xid) {
       messages = messages.filter((e) => e.message.xid === this.xid);
+      if (this.messages.length > messages.length) {
+        return;
+      }
+    } else {
+      messages = messages.filter((e) => !e.message.type.startsWith('GlobalStats'));
     }
 
     this.filteredMessages = messages;
