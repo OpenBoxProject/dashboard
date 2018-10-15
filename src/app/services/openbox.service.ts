@@ -54,6 +54,12 @@ export class OpenboxService {
         console.log(JSON.parse(greeting.body).content);
       });
 
+      this.stompClient.subscribe('/topic/messages', (message) => {
+        const e = JSON.parse(message.body);
+        if (e.message.type === 'GlobalStatsResponse') {
+          this.openBoxGlobalStatsBus.next(e);
+        }
+      });
       this.stompClient.subscribe('/topic/messages', (message) => this.onNewMessage(JSON.parse(message.body)));
       this.stompClient.subscribe('/topic/topology', this.onTopologyUpdated.bind(this));
 
@@ -74,8 +80,6 @@ export class OpenboxService {
     if (e.message.type === 'Alert') {
       e.dpid = e.message.origin_dpid;
       this.openBoxAlertsBus.next(e);
-    } else if (e.message.type === 'GlobalStatsResponse') {
-      this.openBoxGlobalStatsBus.next(e);
     }
 
     e.message.handle = e.message.readHandle || e.message.writeHandle;
@@ -117,7 +121,16 @@ export class OpenboxService {
   }
 
   subscribeToGlobalStatsUpdates(cb) {
-    return this.openBoxGlobalStatsBus.subscribe(cb);
+    const openBoxGlobalStatsBus = new Subject();
+    setTimeout(() => this.messages.filter((m) => m.message.type === 'GlobalStatsResponse').reverse().forEach(msg => openBoxGlobalStatsBus.next(msg)), 0);
+    const sub = this.openBoxGlobalStatsBus.subscribe(msg => {
+        openBoxGlobalStatsBus.next(msg);
+    });
+
+    return openBoxGlobalStatsBus.subscribe(cb).add(() => {
+      sub.unsubscribe();
+    });
+
   }
 
   subscribeToSouthboundMessagesUpdates(cb) {

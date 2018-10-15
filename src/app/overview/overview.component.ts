@@ -1,9 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenboxService} from '../services/openbox.service';
-import {ScrollToService} from '@nicky-lenaers/ngx-scroll-to';
 import {Subscription} from 'rxjs/Subscription';
 import {ViewEncapsulation} from '@angular/core';
-
+import * as moment from 'moment';
 
 interface DataSeries {
   key: string;
@@ -22,8 +21,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
   memData: DataSeries[];
   alertsData: DataSeries[];
 
-  numApps = 0;
-  numOBIs = 0;
+  numApps;
+  numOBIs;
   serverUrl: string;
   topologyGraph: { nodes: any[], links: any[] };
 
@@ -33,14 +32,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   constructor(private openboxService: OpenboxService) {
     this.serverUrl = openboxService.base;
-
-    // this.cpuData = lineDataGeneratorService.generateData();
-    // this.memData = lineDataGeneratorService.generateData();
-    // this.alertsData = lineDataGeneratorService.generateData();
-
   }
-  cpuOptions = this.getLineChartOptions('CPU');
-  memOptions = this.getLineChartOptions('MEM');
+
+  cpuOptions = this.getLineChartOptions('CPU (%)');
+  memOptions = this.getLineChartOptions('MEM (%)');
   getLineChartOptions(label) {
 
     const options = {
@@ -58,12 +53,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
         xAxis: {
           axisLabel: 'Time',
           tickFormat: function(d) {
-            return d3.format(',f')(d);
+            return d3.time.format('%H:%M:%S')(new Date(d));
           }
         },
         x2Axis: {
           tickFormat: function(d) {
-            return d3.format(',f')(d);
+            return d3.time.format('%H:%M:%S')(new Date(d));
           }
         },
         yAxis: {
@@ -102,8 +97,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
   onGlobalStatsUpdated(globalStats) {
 
     const dpid = globalStats.dpid;
-    const time = new Date(globalStats.time);
     const stats = globalStats.message.stats;
+    const time = new Date(globalStats.time).getTime();
 
     const cpuChartData = [];
     const memChartData = [];
@@ -112,10 +107,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
     const cpuValues = this.performanceDataByDpid[dpid] && this.performanceDataByDpid[dpid].cpu || [];
     const memValues = this.performanceDataByDpid[dpid] && this.performanceDataByDpid[dpid].mem || [];
 
-    // {x: 0, y: 0.16613152246719962, series: 2}
-    // const obiCpuData = { x: memValues.length === 0 ? 0 : memValues[memValues.length - 1].x + 1 , y: stats.cpu[0] };
-    // const obiMemData = { x: memValues.length === 0 ? 0 : memValues[memValues.length - 1].x + 1, y: stats.memory_usage };
-    console.log('event time', time);
     const obiCpuData = { x: time , y: stats.cpu[0] }; // todo: take an avg?
     const obiMemData = { x: time, y: stats.memory_usage };
 
