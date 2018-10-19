@@ -46,8 +46,7 @@ export class OpenboxService {
 
     const socket = new SockJS(`${this.webSocketUrl}`);
     this.stompClient = Stomp.over(socket);
-    this.stompClient.connect({}, (frame) => {
-      // setConnected(true);
+    this.stompClient.connect({}, (frame) => { // on success
       console.log('Connected: ' + frame);
       this.stompClient.subscribe('/topic/greetings', function (greeting) {
         // showGreeting(JSON.parse(greeting.body).content);
@@ -67,7 +66,11 @@ export class OpenboxService {
         'name' : 'OpenBox Dashboard'
       });
       this.stompClient.send('/app/hello', {}, data);
-    });
+    },
+       (e) => { // on failure
+          console.error('Stomp Failure. Re-connecting...', e);
+          setTimeout(this.initializeWebSocket.bind(this), 500);
+       });
   }
 
   get onControllerConnect(): EventEmitter<{ online }> {
