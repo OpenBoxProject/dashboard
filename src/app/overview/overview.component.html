@@ -1,6 +1,9 @@
 
 <div class="row jumbotron">
-  <h2>Connected to Moonlight Controller on {{serverUrl}}</h2>
+  <div class="col-sm-12">
+    <h2>Connected to Moonlight Controller on {{this.serverUrl}}</h2>
+    <span>Click <strong class="clickable label label-info" (click)="onUpdateControllerHost()">here</strong> to connect to a different moonlight controller</span>
+  </div>
 </div>
 
 <div class="row jumbotron">

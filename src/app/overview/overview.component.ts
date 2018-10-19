@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenboxService} from '../services/openbox.service';
 import {Subscription} from 'rxjs/Subscription';
 import {ViewEncapsulation} from '@angular/core';
-import * as moment from 'moment';
 
 interface DataSeries {
   key: string;
@@ -31,7 +30,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   private performanceDataByDpid = {};
 
   constructor(private openboxService: OpenboxService) {
-    this.serverUrl = openboxService.base;
+    this.serverUrl = openboxService.baseUrl;
   }
 
   cpuOptions = this.getLineChartOptions('CPU (%)');
@@ -123,6 +122,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     this.cpuData = cpuChartData;
     this.memData = memChartData;
+  }
+
+  onUpdateControllerHost() {
+    this.openboxService.updateControllerHost();
   }
 
   ngOnDestroy() {

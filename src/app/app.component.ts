@@ -8,14 +8,18 @@ import {OpenboxService} from './services/openbox.service';
 })
 
 export class AppComponent implements OnInit {
-  online = true;
+  serverUrl: string;
+  online = false;
 
   title = 'OpenBox Dashboard';
+  postInit: Boolean = false;
 
   constructor(private openboxService: OpenboxService) {
     openboxService.onControllerConnect.subscribe(({online}) => {
       this.online = online;
     });
+    this.serverUrl = openboxService.baseUrl;
+    setTimeout(() => this.postInit = true, 3000);
   }
 
   ngOnInit(): void {
@@ -23,5 +27,9 @@ export class AppComponent implements OnInit {
 
   isActive(link) {
     return link.classList.contains('active-link');
+  }
+
+  onUpdateControllerHost() {
+    this.openboxService.updateControllerHost();
   }
 }
