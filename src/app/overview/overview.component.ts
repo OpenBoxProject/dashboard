@@ -18,7 +18,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   cpuData: DataSeries[];
   memData: DataSeries[];
-  alertsData: DataSeries[];
 
   numApps;
   numOBIs;

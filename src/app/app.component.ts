@@ -10,6 +10,7 @@ import {OpenboxService} from './services/openbox.service';
 export class AppComponent implements OnInit {
   serverUrl: string;
   online = false;
+  showMenu = false;
 
   title = 'OpenBox Dashboard';
   postInit: Boolean = false;

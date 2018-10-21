@@ -68,4 +68,7 @@ export class NetworkComponent implements OnInit, OnDestroy {
     this.topologySubscription.unsubscribe();
   }
 
+  onLegendLabelClick(clicked) {
+    console.log(clicked);
+  }
 }
