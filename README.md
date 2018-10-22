@@ -18,10 +18,10 @@ docker build . -t moonlight-dashboard
 
 ### Run the dashboard
 ```bash
-docker run -d -p4200:4200 --name dashboard -ti moonlight-dashboard
+docker run -d -p80:80 --name dashboard -ti moonlight-dashboard
 ```
 
-The dashboard should be available on http://localhost:4200
+The dashboard should be available on http://localhost
 
 #### Note
 

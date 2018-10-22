@@ -27,7 +27,7 @@
 </div>
 <br>
 <div class="container main-container">
-  <div [hidden]="!online">
+  <div *ngIf="online">
     <router-outlet></router-outlet>
   </div>
   <div [hidden]="!postInit || online" class="alert alert-dismissible alert-warning">
