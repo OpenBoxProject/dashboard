@@ -35,7 +35,7 @@ export class OpenboxService {
   private messageRequestUrl: string;
   private blocksUrl: string;
 
-  private DEFAULT_CONTROLLER_HOST = 'http://localhost';
+  private DEFAULT_CONTROLLER_HOST = 'http://dashboard.openboxproject.org';
   private CONTROLLER_HOST_KEY_NAME = 'openbox.controllerhost';
 
 
