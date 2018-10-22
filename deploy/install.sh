@@ -3,7 +3,7 @@
 # Run from project root
 
 apt update
-apt-get install nginx
+apt-get install nginx -y
 cp deploy/nginx.conf /etc/nginx/conf.d/openbox.conf
 
 npm install
