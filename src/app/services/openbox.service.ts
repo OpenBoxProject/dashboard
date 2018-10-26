@@ -14,6 +14,8 @@ export class OpenboxService {
   private openBoxTopologyBus = new Subject();
   private openBoxGlobalStatsBus = new Subject();
   private messages = [];
+  private performance = [];
+  private alerts = [];
   private blocks: Block[];
 
 
@@ -31,19 +33,24 @@ export class OpenboxService {
   private numAppsUrl: string;
   private aggregatedUrl: string;
   private obiUrl: string;
-  private logsUrl: string;
+  private activityUrl: string;
+  private performanceUrl: string;
+  private alertsUrl: string;
   private messageRequestUrl: string;
   private blocksUrl: string;
 
   private DEFAULT_CONTROLLER_HOST = 'http://dashboard.openboxproject.org';
   private CONTROLLER_HOST_KEY_NAME = 'openbox.controllerhost';
+  private MAX_QUEUE_SIZE = 300;
 
 
   constructor(private http: HttpClient) {
     this.initializeEndpoints();
 
     this.http.get(`${this.blocksUrl}`).subscribe((blocks: Block[]) => this.blocks = blocks);
-    this.http.get(this.logsUrl).subscribe((messages: [{}]) => messages.forEach(this.onNewMessage.bind(this)));
+    this.http.get(this.activityUrl).subscribe((messages: [{}]) => messages.forEach(this.onActivityMessage.bind(this)));
+    this.http.get(this.performanceUrl).subscribe((messages: [{}]) => messages.forEach(this.onPerformanceMessage.bind(this)));
+    this.http.get(this.alertsUrl).subscribe((messages: [{}]) => messages.forEach(this.onAlertMessage.bind(this)));
 
     setTimeout(() => this.initializeWebSocket());
   }
@@ -61,24 +68,12 @@ export class OpenboxService {
         }
 
         this._onControllerConnectionSubscribers.next({online: true});
-        this.stompClient.subscribe('/topic/greetings', function (greeting) {
-          // showGreeting(JSON.parse(greeting.body).content);
-          console.log(JSON.parse(greeting.body).content);
-        });
 
-        this.stompClient.subscribe('/topic/messages', (message) => {
-          const e = JSON.parse(message.body);
-          if (e.message.type === 'GlobalStatsResponse') {
-            this.openBoxGlobalStatsBus.next(e);
-          }
-        });
-        this.stompClient.subscribe('/topic/messages', (message) => this.onNewMessage(JSON.parse(message.body)));
+        this.stompClient.subscribe('/topic/performance', (message) => this.onPerformanceMessage(JSON.parse(message.body)));
+        this.stompClient.subscribe('/topic/messages', (message) => this.onActivityMessage(JSON.parse(message.body)));
+        this.stompClient.subscribe('/topic/alerts', (message) => this.onAlertMessage(JSON.parse(message.body)));
         this.stompClient.subscribe('/topic/topology', this.onTopologyUpdated.bind(this));
 
-        const data = JSON.stringify({
-          'name': 'OpenBox Dashboard'
-        });
-        this.stompClient.send('/app/hello', {}, data);
       },
       (e) => { // on failure
         console.error('Stomp Failure. Re-connecting...', e);
@@ -97,23 +92,31 @@ export class OpenboxService {
     return this._onControllerConnectionSubscribers;
   }
 
-  onNewMessage(e) {
-    let next = this.messages.reverse();
-
-    if (e.message.type === 'Alert') {
-      e.dpid = e.message.origin_dpid;
-      this.openBoxAlertsBus.next(e);
-    }
-
+  onActivityMessage(e) {
     e.message.handle = e.message.readHandle || e.message.writeHandle;
-    next.push(e);
-    next = next.reverse().slice(0, 100);
-    this.messages = next;
-
+    this.addElementToLimitedQueue(this.messages, e);
     this.openBoxMessageBus.next(this.messages);
   }
 
-  colorTopologyGraph(topology) {
+  onPerformanceMessage(e) {
+    this.addElementToLimitedQueue(this.performance, e);
+    this.openBoxGlobalStatsBus.next(e);
+  }
+
+  onAlertMessage(e) {
+    e.dpid = e.message.origin_dpid;
+    this.addElementToLimitedQueue(this.alerts, e);
+    this.openBoxAlertsBus.next(e);
+  }
+
+  private addElementToLimitedQueue(arr, el) {
+    arr.push(el);
+    if (arr.length > this.MAX_QUEUE_SIZE) {
+      arr.splice(arr.length - 1, 1);
+    }
+  }
+
+  private colorTopologyGraph(topology) {
     topology.nodes = topology.nodes.map((n) => {
       const isEndpoint = n.id.startsWith('E');
       const isSegment = n.id.startsWith('S');
@@ -145,13 +148,11 @@ export class OpenboxService {
   }
 
   subscribeToGlobalStatsUpdates(cb) {
-    const openBoxGlobalStatsBus = new Subject();
-    setTimeout(() => this.messages.filter((m) => m.message.type === 'GlobalStatsResponse').reverse().forEach(msg => openBoxGlobalStatsBus.next(msg)), 0);
-    const sub = this.openBoxGlobalStatsBus.subscribe(msg => {
-      openBoxGlobalStatsBus.next(msg);
-    });
+    const newGlobalStatsBus = new Subject();
+    setTimeout(() => this.performance.forEach(msg => newGlobalStatsBus.next(msg)), 0);
+    const sub = this.openBoxGlobalStatsBus.subscribe(msg => { newGlobalStatsBus.next(msg); });
 
-    return openBoxGlobalStatsBus.subscribe(cb).add(() => {
+    return newGlobalStatsBus.subscribe(cb).add(() => {
       sub.unsubscribe();
     });
 
@@ -160,6 +161,11 @@ export class OpenboxService {
   subscribeToSouthboundMessagesUpdates(cb) {
     setTimeout(() => this.openBoxMessageBus.next(this.messages), 0);
     return this.openBoxMessageBus.subscribe(cb);
+  }
+
+  subscribeToAlerts(cb) {
+    setTimeout(() => this.openBoxAlertsBus.next(this.alerts), 0);
+    return this.openBoxAlertsBus.subscribe(cb);
   }
 
   getApps() {
@@ -208,10 +214,10 @@ export class OpenboxService {
   }
 
   updateControllerHost() {
-    const hostUrl = window.prompt('Enter Controller Host with protocol""', 'http://localhost')
+    const hostUrl = window.prompt('Enter Controller Host with protocol""', 'http://localhost');
     if (hostUrl && hostUrl.match(/https?:\/\/\w+/)) {
       localStorage.setItem(this.CONTROLLER_HOST_KEY_NAME, hostUrl);
-      window.alert('MoonLight Controller hostname was updated to ' + hostUrl)
+      window.alert('MoonLight Controller hostname was updated to ' + hostUrl);
       window.location.reload();
     } else {
       window.alert('Invalid Host Url. Host url must be of the form https?://<HOSTNAME>');
@@ -237,7 +243,9 @@ export class OpenboxService {
     this.numAppsUrl = this.baseUrl + 'numApps';
     this.aggregatedUrl = this.baseUrl + 'aggregated.json';
     this.obiUrl = this.baseUrl + 'obi.json';
-    this.logsUrl = this.baseUrl + 'network/log.json';
+    this.activityUrl = this.baseUrl + 'activity.json';
+    this.performanceUrl = this.baseUrl + 'performance.json';
+    this.alertsUrl = this.baseUrl + 'alerts.json';
     this.messageRequestUrl = this.baseUrl + 'message';
     this.blocksUrl = 'assets/blocks.json';
   }

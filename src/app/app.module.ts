@@ -25,6 +25,7 @@ const routes: Routes = [
   { path: 'overview', component: OverviewComponent },
   { path: 'apps', component: AppsComponent },
   { path: 'activity', component: SouthboundLogComponent },
+  { path: 'alerts', component: SouthboundLogComponent },
 ];
 
 @NgModule({

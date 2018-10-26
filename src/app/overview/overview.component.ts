@@ -78,10 +78,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.openboxService.getTopology()
-      .subscribe(this.onTopologyUpdated.bind(this));
+    console.log('Initializing OverView Component');
 
+    this.openboxService.getTopology().subscribe(this.onTopologyUpdated.bind(this));
     this.topologySubscription = this.openboxService.subscribeToTopologyUpdates(this.onTopologyUpdated.bind(this));
+
     this.globalStatsSubscription = this.openboxService.subscribeToGlobalStatsUpdates(this.onGlobalStatsUpdated.bind(this));
 
     this.openboxService.getNumApps().subscribe((numApps: number) => this.numApps = numApps);
