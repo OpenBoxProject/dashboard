@@ -9,10 +9,8 @@ import {ActivatedRoute, Router} from "@angular/router";
   templateUrl: './southbound-log.component.html',
   styleUrls: ['./southbound-log.component.css']
 })
-export class SouthboundLogComponent implements OnInit, OnChanges, OnDestroy {
+export class SouthboundLogComponent implements OnInit, OnDestroy {
   filteredMessages: any;
-  messages: { time, direction, message: { xid, blockId, type, dpid?, sourceAddr, handle? } }[] = [];
-
   selected = null;
 
   @Input() xid;
@@ -56,14 +54,9 @@ export class SouthboundLogComponent implements OnInit, OnChanges, OnDestroy {
 
     if (this.xid) {
       messages = messages.filter((e) => e.message.xid === this.xid);
-      if (this.messages.length > messages.length) {
-        return;
-      }
     }
 
-    this.messages = [].concat(messages).reverse();
-
-    this.filteredMessages = this.messages.reverse();
+    this.filteredMessages = [].concat(messages).reverse();
   }
 
   getMessageClassName(type) {
@@ -75,11 +68,6 @@ export class SouthboundLogComponent implements OnInit, OnChanges, OnDestroy {
       default:
         return 'badge-success';
     }
-  }
-
-  ngOnChanges() {
-    this.selected = null;
-    this.updateData(this.messages);
   }
 
   ngOnDestroy() {
