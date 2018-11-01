@@ -16,6 +16,11 @@ body {
 #side-menu p, .btn, .btn-xs{
   cursor: pointer;
 }
+
+.btn-xs {
+  font-size: 12px;
+}
+
 h1, h2, h3, h4, p{
   font-style:italic;
 }
@@ -24,7 +29,7 @@ h1, h2, h3, h4, p{
   font-weight:bold;
 }
 
-#side-menu button , .sticky-btn {
+.sticky-btn {
   position: fixed;
   bottom: 0;
   z-index:10;

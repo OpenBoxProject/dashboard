@@ -1,0 +1,9 @@
+<h5><span class="badge badge-primary">New OpenBox Application</span></h5>
+
+<p [hidden]="selectedFile" >Select a jar</p>
+<p [hidden]="!selectedFile" >Selected {{selectedFile && selectedFile.name}}</p>
+
+<input [hidden]="true" (change)="onChange(file.files[0])" #file type="file" name="file" accept="application/java-archive" size="45"/>
+
+<button class="btn btn-xs btn-info" (click)="file.click()">Choose File</button>
+<button [disabled]="!selectedFile" class="btn btn-xs btn-primary" (click)="onUpload()">Upload</button>

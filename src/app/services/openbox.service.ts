@@ -38,6 +38,7 @@ export class OpenboxService {
   private alertsUrl: string;
   private messageRequestUrl: string;
   private blocksUrl: string;
+  private uploadApplicationUrl: string;
 
   private DEFAULT_CONTROLLER_HOST = 'http://dashboard.openboxproject.org';
   private CONTROLLER_HOST_KEY_NAME = 'openbox.controllerhost';
@@ -224,6 +225,12 @@ export class OpenboxService {
     }
   }
 
+  uploadApplication(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(this.uploadApplicationUrl, formData);
+  }
+
   private initializeEndpoints() {
 
     let controllerHost = this.DEFAULT_CONTROLLER_HOST;
@@ -248,5 +255,7 @@ export class OpenboxService {
     this.alertsUrl = this.baseUrl + 'alerts.json';
     this.messageRequestUrl = this.baseUrl + 'message';
     this.blocksUrl = 'assets/blocks.json';
+
+    this.uploadApplicationUrl =  this.baseUrl + 'uploadApplication';
   }
 }

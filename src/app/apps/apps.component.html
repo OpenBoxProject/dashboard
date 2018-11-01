@@ -4,15 +4,20 @@
       <h3><span class="badge badge-info">OpenBox Apps</span></h3>
       <p *ngFor="let app of apps" (click)="scrollTo(app.name)">{{app.name}}</p>
       <br>
+
       <h3><span class="badge badge-info">Aggregation Result</span></h3>
       <p *ngFor="let location of aggregated" (click)="scrollTo('location-'+location.location.id)">Location
         {{location.location.id}}</p>
 
-      <button class="btn btn-info" (click)="scrollTo('side-menu')">To Menu <span
+      <button class="sticky-btn btn btn-info" (click)="scrollTo('side-menu')">To Menu <span
         class="glyphicons glyphicons-chevron-up"></span></button>
+
+      <hr/>
+      <app-application-upload></app-application-upload>
 
     </div>
   </div>
+
   <div class="col-md-10">
     <div class="row jumbotron">
       <h1>OpenBox Apps</h1>

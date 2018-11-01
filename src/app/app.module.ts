@@ -18,6 +18,7 @@ import { SouthboundLogComponent } from './southbound-log/southbound-log.componen
 import { ObiComponent } from './obi/obi.component';
 import { BlockComponent } from './obi/block/block.component';
 import { BlockRequestComponent } from './obi/block/block-request/block-request.component';
+import { ApplicationUploadComponent } from './apps/application-upload/application-upload.component';
 
 
 const routes: Routes = [
@@ -38,7 +39,8 @@ const routes: Routes = [
     SouthboundLogComponent,
     ObiComponent,
     BlockComponent,
-    BlockRequestComponent
+    BlockRequestComponent,
+    ApplicationUploadComponent
   ],
   imports: [
     NgxGraphModule,
