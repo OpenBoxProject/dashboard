@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { OpenboxService } from '../../services/openbox.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { OpenboxService } from '../../services/openbox.service';
 })
 export class ApplicationUploadComponent implements OnInit {
 
+  @Output() applicationUploaded = new EventEmitter();;
   selectedFile;
 
   constructor(private openBoxService: OpenboxService) { }
@@ -18,8 +19,7 @@ export class ApplicationUploadComponent implements OnInit {
   onUpload() {
     console.log('Upload Clicked', this.selectedFile);
     this.openBoxService.uploadApplication(this.selectedFile).subscribe(resp => {
-      window.alert('Success! Reloading...');
-      window.location.reload();
+      this.applicationUploaded.emit(this.selectedFile.name);
     });
   }
 

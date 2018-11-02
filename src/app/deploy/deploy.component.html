@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="jumbotron">
+
+        <h3><span class="badge badge-primary">Deployed Applications</span></h3>
+
+        <p *ngFor="let app of deployedApplications">
+          {{app}}
+        </p>
+
+        <br/>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="jumbotron">
+
+        <h3><span class="badge badge-primary">New OpenBox Application</span></h3>
+
+        <app-application-upload (applicationUploaded)="onApplicationUploadedSuccess()"></app-application-upload>
+
+        <br/>
+        <br/>
+      </div>
+
+      <div class="jumbotron">
+
+        <h3><span class="badge badge-primary">Deploy</span></h3>
+
+        <p>
+          Select OpenBox Applications to deploy
+        </p>
+
+        <div class="form-check" *ngFor="let app of repositoryApplications">
+          <input class="form-check-input" (change)="onChange(app, $event.target.checked)" name="{{ app }}"
+                 type="checkbox" id="{{app}}">
+          <label class="form-check-label" for="{{app}}">
+            {{app}}
+          </label>
+        </div>
+        <br/>
+        <button [disabled]="selectedApplications.length==0" class="btn btn-xs btn-info" (click)="deploy()">
+          {{selectedApplications.length === 0 ?
+          'Please Select Apps' :
+          'Deploy '+selectedApplications.length + ' Apps' }}
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
