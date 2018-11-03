@@ -4,6 +4,7 @@
       <div class="jumbotron">
 
         <h3><span class="badge badge-primary">Deployed Applications</span></h3>
+        <br/>
 
         <p *ngFor="let app of deployedApplications">
           {{app}}
@@ -16,6 +17,7 @@
       <div class="jumbotron">
 
         <h3><span class="badge badge-primary">New OpenBox Application</span></h3>
+        <br/>
 
         <app-application-upload (applicationUploaded)="onApplicationUploadedSuccess()"></app-application-upload>
 
@@ -26,6 +28,7 @@
       <div class="jumbotron">
 
         <h3><span class="badge badge-primary">Deploy</span></h3>
+        <br/>
 
         <p>
           Select OpenBox Applications to deploy

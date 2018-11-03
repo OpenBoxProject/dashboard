@@ -28,6 +28,7 @@ export class DeployComponent implements OnInit {
   }
 
   onApplicationUploadedSuccess() {
+    alert('Success!');
     this.getAppsInformation();
   }
 
