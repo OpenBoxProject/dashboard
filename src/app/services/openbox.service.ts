@@ -26,8 +26,9 @@ export class OpenboxService {
   private mockUrl = 'assets/mocks/';
   private serverUrl;
   private webSocketUrl;
+  controllerHost: string;
 
-  baseUrl: string;
+  private baseUrl: string;
   private topologyUrl: string;
   private appsUrl: string;
   private numAppsUrl: string;
@@ -217,7 +218,7 @@ export class OpenboxService {
   }
 
   updateControllerHost() {
-    const hostUrl = window.prompt('Enter Controller Host with protocol""', 'http://localhost');
+    const hostUrl = window.prompt('Enter Controller Host with protocol', 'http://localhost');
     if (hostUrl && hostUrl.match(/https?:\/\/\w+/)) {
       localStorage.setItem(this.CONTROLLER_HOST_KEY_NAME, hostUrl);
       window.alert('MoonLight Controller hostname was updated to ' + hostUrl);
@@ -249,7 +250,7 @@ export class OpenboxService {
     if (storedControllerValue) {
       controllerHost = storedControllerValue;
     }
-
+    this.controllerHost = controllerHost;
     this.mockUrl = 'assets/mocks/';
     this.serverUrl = `${controllerHost}:3635/`;
     this.webSocketUrl = `${controllerHost}:8080/socket`;

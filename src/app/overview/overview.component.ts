@@ -29,7 +29,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   private performanceDataByDpid = {};
 
   constructor(private openboxService: OpenboxService) {
-    this.serverUrl = openboxService.baseUrl;
+    this.serverUrl = openboxService.controllerHost;
   }
 
   cpuOptions = this.getLineChartOptions('CPU (%)');

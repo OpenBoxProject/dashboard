@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     openboxService.onControllerConnect.subscribe(({online}) => {
       this.online = online;
     });
-    this.serverUrl = openboxService.baseUrl;
+    this.serverUrl = openboxService.controllerHost;
     setTimeout(() => this.postInit = true, 3000);
   }
 

@@ -37,7 +37,7 @@
     <router-outlet></router-outlet>
   </div>
   <div [hidden]="!postInit || online" class="alert alert-dismissible alert-warning">
-    <h1>Waiting for moonlight controller on {{this.serverUrl}}</h1>
+    <h1>Waiting for moonlight controller on {{controllerHost}}</h1>
     <span>Click <strong class="clickable label label-info" (click)="onUpdateControllerHost()">here</strong> to connect to a different moonlight controller</span>
   </div>
 </div>
