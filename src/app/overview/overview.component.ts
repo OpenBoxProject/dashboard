@@ -21,7 +21,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   numApps;
   numOBIs;
-  serverUrl: string;
+  controllerHost: string;
   topologyGraph: { nodes: any[], links: any[] };
 
   private topologySubscription: Subscription;
@@ -29,7 +29,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   private performanceDataByDpid = {};
 
   constructor(private openboxService: OpenboxService) {
-    this.serverUrl = openboxService.controllerHost;
+    this.controllerHost = openboxService.controllerHost;
   }
 
   cpuOptions = this.getLineChartOptions('CPU (%)');

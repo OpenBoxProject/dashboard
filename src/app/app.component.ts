@@ -8,7 +8,7 @@ import {OpenboxService} from './services/openbox.service';
 })
 
 export class AppComponent implements OnInit {
-  serverUrl: string;
+  controllerHost: string;
   online = false;
   showMenu = false;
 
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     openboxService.onControllerConnect.subscribe(({online}) => {
       this.online = online;
     });
-    this.serverUrl = openboxService.controllerHost;
+    this.controllerHost = openboxService.controllerHost;
     setTimeout(() => this.postInit = true, 3000);
   }
 
