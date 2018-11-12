@@ -1,4 +1,4 @@
-<p [hidden]="selectedFile" >Select a jar</p>
+<p [hidden]="selectedFile" >Select a jar to add it to the list of <strong>Available Apps</strong></p>
 <p [hidden]="!selectedFile" >Selected {{selectedFile && selectedFile.name}}</p>
 
 <input [hidden]="true" (change)="onChange(file.files[0])" #file type="file" name="file" accept="application/java-archive" size="45"/>

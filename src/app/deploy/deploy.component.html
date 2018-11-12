@@ -33,6 +33,11 @@
           Select OpenBox Applications to deploy
         </p>
 
+        <p>
+          <strong>
+            Available Apps
+          </strong>
+        </p>
         <div class="form-check" *ngFor="let app of repositoryApplications">
           <input class="form-check-input" (change)="onChange(app, $event.target.checked)" name="{{ app }}"
                  type="checkbox" id="{{app}}">
