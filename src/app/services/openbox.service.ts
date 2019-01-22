@@ -9,6 +9,8 @@ import {map} from 'rxjs/operators';
 @Injectable()
 export class OpenboxService {
   private stompClient;
+
+  // todo: switch to ReplaySubject for automatic buffering
   private openBoxMessageBus = new Subject();
   private openBoxAlertsBus = new Subject();
   private openBoxTopologyBus = new Subject();

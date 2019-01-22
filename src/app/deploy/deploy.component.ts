@@ -33,15 +33,19 @@ export class DeployComponent implements OnInit {
   }
 
   getAppsInformation() {
-    this.openboxService.getRepositoryApplications().subscribe((apps: string[]) => this.repositoryApplications = apps);
-    this.openboxService.getApps().subscribe((apps: {name: string}[]) => this.deployedApplications = apps.map((app) => app.name));
+    this.openboxService.getRepositoryApplications().subscribe((apps: {jarName: string, deployed: boolean}[]) => {
+      this.repositoryApplications = apps
+      this.selectedApplications = apps.filter((app)=>app.deployed).map((app)=>app.jarName);
+    });
+    
+    this.openboxService.getApps().subscribe((apps: {name: string, jarName: string}[]) => this.deployedApplications = apps.map((app) => {return {name: app.name, jarName: app.jarName}}));
   }
 
-  onChange(app: string, isChecked: boolean) {
+  onChange(app: {jarName: string, deployed: boolean}, isChecked: boolean) {
     if (isChecked) {
-      this.selectedApplications.push(app);
+      this.selectedApplications.push(app.jarName);
     } else {
-      const index = this.selectedApplications.indexOf(app);
+      const index = this.selectedApplications.indexOf(app.jarName);
       this.selectedApplications.splice(index, 1);
     }
 
