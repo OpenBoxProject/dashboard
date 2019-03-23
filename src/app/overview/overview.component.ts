@@ -106,7 +106,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     const cpuValues = this.performanceDataByDpid[dpid] && this.performanceDataByDpid[dpid].cpu || [];
     const memValues = this.performanceDataByDpid[dpid] && this.performanceDataByDpid[dpid].mem || [];
 
-    const obiCpuData = { x: time , y: stats.cpu[0] }; // todo: take an avg?
+    const obiCpuData = { x: time , y: stats.avg_load };
     const obiMemData = { x: time, y: stats.memory_usage };
 
     this.performanceDataByDpid[dpid] = {
