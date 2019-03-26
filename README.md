@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Openbox Dashboard
 
 ## Introduction
@@ -32,3 +33,6 @@ The dashboard Websocket is expected to run on localhost:8080
 If you are using Docker to run the moonlight controller, don't forget to expose these ports
 
 For more details, see Moonlight Controller
+=======
+dashboard
+>>>>>>> github/master
