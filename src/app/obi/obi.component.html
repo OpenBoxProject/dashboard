@@ -1,0 +1,24 @@
+<div class="row jumbotron jumbotron-heading">
+  <h3>OBI {{obi.dpid}}</h3>
+  <div *ngIf="globalStats">
+    <pre>{{globalStats}}</pre>
+  </div>
+</div><div class="row jumbotron">
+    <pre>{{config}}</pre>
+</div>
+<div *ngIf="!emptyGraphSentToOBI" class="row jumbotron">
+  <h4>Click on a block to see it's details and interact with it</h4>
+  <app-graphs [graph]="obi.processingGraph"
+              [orientation]="'TB'"
+              (onLegendLabelClick)="onLegendLabelClick($event)"
+              (onSelect)="onOBIBlockSelect($event)"
+  ></app-graphs>
+</div>
+<div *ngIf="emptyGraphSentToOBI" class="row jumbotron">
+  <h5>The Controller has sent an empty graph to this OBI</h5>
+</div>
+<div id="obiDetailsView">
+  <div *ngIf="selected">
+    <app-block [block]="selected" [dpid]="obi.dpid"></app-block>
+  </div>
+</div>

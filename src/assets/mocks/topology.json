@@ -1,0 +1,48 @@
+{
+  "nodes": [
+    {
+      "id": "S1",
+      "label": "Segment 1"
+    }, {
+      "id": "S220",
+      "label": "Segment 220"
+    }, {
+      "id": "E2",
+      "label": "Endpoint 2"
+    }, {
+      "id": "E3",
+      "label": "Endpoint 3"
+    }, {
+      "id": "E22",
+      "label": "Endpoint 22"
+    }, {
+      "id": "E8796754288143",
+      "label": "Endpoint 8796754288143"
+    } , {
+      "id": "OBI1",
+      "label": "OBI Mock",
+      "dpid": 22
+    }
+  ],
+  "links": [
+    {
+      "source": "S1",
+      "target": "S220"
+    },{
+      "source": "S1",
+      "target": "E2"
+    },{
+      "source": "S1",
+      "target": "E3"
+    }, {
+      "source": "S220",
+      "target": "E22"
+    }, {
+      "source": "S220",
+      "target": "E8796754288143"
+    }, {
+      "source": "E22",
+      "target": "OBI1"
+    }
+  ]
+}

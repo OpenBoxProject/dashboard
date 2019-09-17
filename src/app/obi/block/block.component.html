@@ -1,0 +1,31 @@
+
+<div class="row jumbotron">
+  <h3> {{block.label}}</h3>
+</div>
+<div class="row">
+  <div class="col-sm-4">
+    <div *ngIf="block.config">
+      <br>
+      <div class="jumbotron requests-control" [hidden]="block.config.read_handlers.length===0">
+        <h5>Read Requests</h5>
+        <input type="button" *ngFor="let h of block.config.read_handlers;" class="btn-xs btn-info"
+               [alt]="h.description" style="margin-right:2px;"
+               (click)="sendReadRequest(h.name)" value="{{h.name}} : {{h.type}}"/>
+      </div>
+      <div  class="jumbotron requests-control" [hidden]="block.config.write_handlers.length===0">
+        <h5>Write Requests</h5>
+        <input type="button" *ngFor="let h of block.config.write_handlers;" class="btn-xs btn-info"
+               [alt]="h.description"
+               (click)="sendWriteRequest(h.name)" value="{{h.name}}({{h.type!=='null' ? h.type : '' }})"/>
+      </div>
+    </div>
+    <div class="jumbotron">
+      <h5>Configuration</h5>
+      <pre>{{block.json}}</pre>
+    </div>
+  </div>
+
+  <div id="request" *ngIf="handle" class="col-sm-8">
+    <app-block-request [dpid]="dpid" [block]="block" [handle]="handle" [type]="requestType"></app-block-request>
+  </div>
+</div>

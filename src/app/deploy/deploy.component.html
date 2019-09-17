@@ -1,0 +1,63 @@
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="jumbotron">
+
+        <h3><span class="badge badge-primary">Deployed Applications</span></h3>
+        <br/>
+
+        <div *ngFor="let app of deployedApplications">
+          <strong>{{app.name}}</strong>
+          <br/>
+          <span><i>{{app.jarName}}</i></span>
+          <br/>
+          <br/>
+        </div>
+
+        <br/>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="jumbotron">
+
+        <h3><span class="badge badge-primary">New OpenBox Application</span></h3>
+        <br/>
+
+        <app-application-upload (applicationUploaded)="onApplicationUploadedSuccess()"></app-application-upload>
+
+        <br/>
+        <br/>
+      </div>
+
+      <div class="jumbotron">
+
+        <h3><span class="badge badge-primary">Deploy</span></h3>
+        <br/>
+
+        <p>
+          Select OpenBox Applications to deploy
+        </p>
+
+        <p>
+          <strong>
+            Available Apps
+          </strong>
+        </p>
+        <div class="form-check" *ngFor="let app of repositoryApplications">
+          <input class="form-check-input" (change)="onChange(app, $event.target.checked)" name="{{ app.jarName }}"
+                 type="checkbox" id="{{app.jarName}}"
+                 [checked]="app.deployed">
+          <label class="form-check-label" for="{{app.jarName}}">
+            {{app.jarName}}
+          </label>
+        </div>
+        <br/>
+        <button [disabled]="selectedApplications.length==0" class="btn btn-xs btn-info" (click)="deploy()">
+          {{selectedApplications.length === 0 ?
+          'Please Select Apps' :
+          'Deploy '+selectedApplications.length + ' Apps' }}
+        </button>
+
+      </div>
+    </div>
+  </div>
+

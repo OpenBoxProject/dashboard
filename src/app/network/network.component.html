@@ -1,0 +1,21 @@
+<div class="row jumbotron">
+      <div class="col-sm-12">
+        <h1>Topology</h1>
+        <hr/>
+        <h5>Click on an OBI for more details</h5>
+      <app-graphs [graph]="topologyGraph"
+                  [orientation]="'TB'"
+                  (onLegendLabelClick)="onLegendLabelClick($event)"
+                  (onSelect)="onSelect($event)"
+      ></app-graphs>
+    </div>
+</div>
+<div id="selectedView">
+  <div *ngIf="selected" class="jumbotron">
+    <h5>Configuration</h5>
+    <pre>{{selected.json}}</pre>
+  </div>
+</div>
+<div id="obiView">
+ <app-obi *ngIf="obi" [obi]="obi"></app-obi>
+</div>

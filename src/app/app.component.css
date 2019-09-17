@@ -1,0 +1,10 @@
+.main-container {
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+  max-width: 90% !important;
+}
+
+.navbar-brand {
+  font-size: 1.5rem !important;
+  font-style: italic !important;
+}
